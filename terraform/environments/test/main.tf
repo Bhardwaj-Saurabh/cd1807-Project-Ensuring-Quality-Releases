@@ -7,10 +7,11 @@ provider "azurerm" {
 }
 terraform {
   backend "azurerm" {
-    storage_account_name = ""
-    container_name       = ""
-    key                  = ""
-    access_key           = ""
+    storage_account_name = "tfstate110547377"
+    container_name       = "tfstate"
+    key                  = "test.terraform.tfstate"
+    # access_key should be provided via environment variable ARM_ACCESS_KEY
+    # or Azure CLI authentication
   }
 }
 module "resource_group" {
@@ -51,4 +52,14 @@ module "publicip" {
   application_type = "${var.application_type}"
   resource_type    = "publicip"
   resource_group   = "${module.resource_group.resource_group_name}"
+}
+
+module "vm" {
+  source           = "../../modules/vm"
+  location         = "${var.location}"
+  application_type = "${var.application_type}"
+  resource_type    = "VM"
+  resource_group   = "${module.resource_group.resource_group_name}"
+  subnet_id        = "${module.network.subnet_id_test}"
+  public_ip_id     = "${module.publicip.public_ip_address_id}"
 }
