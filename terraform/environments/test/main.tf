@@ -10,9 +10,7 @@ terraform {
     storage_account_name = "tfstate110547377"
     container_name       = "tfstate"
     key                  = "test.terraform.tfstate"
-    # access_key should be provided via environment variable ARM_ACCESS_KEY
-    # or Azure CLI authentication
-  }
+    access_key           = "${var.access_key}"
 }
 module "resource_group" {
   source               = "../../modules/resource_group"
